@@ -1,6 +1,6 @@
 {
   "name": "slack-helperbot",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A slackbot framework for easily building microbots and commands",
   "main": "index.js",
   "scripts": {
