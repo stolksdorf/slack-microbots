@@ -2,8 +2,6 @@ var Sync = require('syncho');
 var logbot = require('./logbot');
 var db = require("redis").createClient(process.env.REDIS_URL);
 
-//console.log('REDIS', client.get.sync);
-
 var TEMP_STORAGE = {}
 
 var storage = {
@@ -35,15 +33,22 @@ db.on("error", function(err){
 	console.log('REDIS ERROR: Falling back to node in-memory storage');
 
 	//Fallback storage
-	db = {
-		get : function(key, cb){
-			cb && cb(null, TEMP_STORAGE[key]);
+	storage = {
+		get : function(key){
+			return TEMP_STORAGE[key];
 		},
-		set : function(key, val, cb){
+		set : function(key, val){
 			TEMP_STORAGE[key] = val;
-			cb && cb();
-		}
-	}
+		},
+		getAsync : function(key, cb){
+			return cb(TEMP_STORAGE[key]);
+		},
+		setAsync : function(key, val, cb){
+			TEMP_STORAGE[key] = val;
+			return cb();
+		},
+	};
+
 });
 
 
