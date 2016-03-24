@@ -1,6 +1,6 @@
 {
   "name": "slack-helperbot",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A slackbot framework for easily building microbots and commands",
   "main": "index.js",
   "scripts": {
@@ -21,11 +21,11 @@
   },
   "homepage": "https://github.com/stolksdorf/slack-helperbot#readme",
   "dependencies": {
+    "async": "^2.0.0-rc.2",
     "domain": "0.0.1",
     "lodash": "^4.6.1",
     "redis": "^2.5.3",
     "slackbots": "^0.5.1",
-    "superagent": "^1.8.2",
-    "syncho": "^0.2.5"
+    "superagent": "^1.8.2"
   }
 }
