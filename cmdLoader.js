@@ -1,6 +1,6 @@
 var _ = require('lodash');
 var path = require('path');
-var Logbot = require('../logbot');
+var Logbot = require('./logbot');
 
 var Cmds = [];
 

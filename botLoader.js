@@ -1,8 +1,8 @@
 var _ = require('lodash');
 var path = require('path');
 var SlackBot = require('slackbots');
-var Logbot = require('../logbot');
-var Storage = require('../storage');
+var Logbot = require('./logbot');
+var Storage = require('./storage');
 
 var DEBUG = false;
 var LOCAL = false;
@@ -144,9 +144,8 @@ module.exports = {
 		return getBotInContext(botInfo || {}, {});
 	},
 
-	start : function(botInfo, isLocal, /*isDebug*/){
+	start : function(botInfo, isLocal){
 		LOCAL = isLocal;
-		//DEBUG = isDebug;
 
 		BotInstance = new SlackBot({
 			token : botInfo.token,
