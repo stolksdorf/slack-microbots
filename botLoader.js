@@ -53,9 +53,6 @@ var shouldHelperRespond = function(eventData){
 	//Don't ever listen to logbot
 	if(eventData.user == 'logbot') return false;
 
-	//if locally developing, only listen to #diagnostics
-	if(LOCAL && eventData.channel != 'diagnostics' && !DEBUG) return false;
-
 	//if in production, never listen to #diagnostics
 	if(!LOCAL && eventData.channel == 'diagnostics') return false;
 
@@ -67,7 +64,7 @@ var shouldBotRespond = function(eventData, bot){
 	if(eventData.user && eventData.user == bot.name) return false;
 
 	//Unless locally developing, check if the bot is only supposed to listen in one channel
-	if(_.isString(bot.listenIn) && !LOCAL){
+	if(_.isString(bot.listenIn)){
 		if(eventData.channel == bot.listenIn) return true;
 		return false;
 	}
@@ -99,8 +96,8 @@ var handleEvent = function(data) {
 	data = enhanceEventData(data);
 	if(!shouldHelperRespond(data)) return;
 
-	//if locally developing and you want full debugging, it console logs every event
-	if(LOCAL && DEBUG){console.log(data);console.log('---');}
+	//if locally developing, it console logs every event
+	if(LOCAL){console.log(data);console.log('---');}
 
 	_.each(botEventMapping[data.type], (bot)=>{
 		if(shouldBotRespond(data, bot)){
@@ -143,10 +140,13 @@ module.exports = {
 	getBots : function(){
 		return Bots;
 	},
+	getBotContext : function(botInfo){
+		return getBotInContext(botInfo || {}, {});
+	},
 
-	start : function(botInfo, isLocal, isDebug){
+	start : function(botInfo, isLocal, /*isDebug*/){
 		LOCAL = isLocal;
-		DEBUG = isDebug;
+		//DEBUG = isDebug;
 
 		BotInstance = new SlackBot({
 			token : botInfo.token,
@@ -178,7 +178,7 @@ module.exports = {
 					return bot;
 				}catch(err){
 					Logbot.error('Bot Load Error : ' + botPath, err);
-					if(!process.env.PRODUCTION) throw err;
+					if(LOCAL) throw err;
 					loadResults.error.push(botPath);
 					return createDummyBot();
 				}

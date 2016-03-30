@@ -1,7 +1,7 @@
 var _ = require('lodash');
 var logbot = require('./logbot');
-var cmds = require('./lib/cmds');
-var bots = require('./lib/bots');
+var cmds = require('./cmdLoader');
+var bots = require('./botLoader');
 
 
 
@@ -10,7 +10,6 @@ module.exports = function(configObj){
 		expressApp : null,
 		diagnosticsWebhook : null,
 		local : true,
-		debug : true,
 
 		cmdList : [],
 		botList : [],
@@ -26,7 +25,7 @@ module.exports = function(configObj){
 	logbot.setUrl(configObj.diagnosticsWebhook);
 	var cmdLoadResult = cmds.load(configObj.expressApp, configObj.cmdList)
 
-	bots.start(configObj.botInfo, configObj.local, configObj.debug);
+	bots.start(configObj.botInfo, configObj.local);
 	var botLoadResult = bots.load(configObj.botList);
 
 	//Separate message for local testing
