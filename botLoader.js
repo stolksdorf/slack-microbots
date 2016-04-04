@@ -63,13 +63,18 @@ var shouldBotRespond = function(eventData, bot){
 	//Don't listen to yourself
 	if(eventData.user && eventData.user == bot.name) return false;
 
-	//Unless locally developing, check if the bot is only supposed to listen in one channel
-	if(_.isString(bot.listenIn)){
-		if(eventData.channel == bot.listenIn) return true;
-		return false;
+	var shouldRespond = true;
+
+
+	//Unless locally developing, check if the bot is only supposed to listen in a specific channel
+	if(bot.listenIn) shouldRespond = false;
+	if(eventData.channel == bot.listenIn || _.includes(bot.listenIn, eventData.channel)) shouldRespond = true;
+
+	if(eventData.isDirect && (bot.listenIn == 'direct' || _.includes(bot.listenIn, 'direct'))){
+		shouldRespond = true
 	}
 
-	return true;
+	return shouldRespond;
 }
 
 //Cleans up the event object slack gives us
@@ -97,7 +102,7 @@ var handleEvent = function(data) {
 	if(!shouldHelperRespond(data)) return;
 
 	//if locally developing, it console logs every event
-	if(LOCAL){console.log(data);console.log('---');}
+	//if(LOCAL){console.log(data);console.log('---');}
 
 	_.each(botEventMapping[data.type], (bot)=>{
 		if(shouldBotRespond(data, bot)){
