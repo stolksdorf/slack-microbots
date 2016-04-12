@@ -145,8 +145,8 @@ module.exports = {
 	getBots : function(){
 		return Bots;
 	},
-	getBotContext : function(botInfo){
-		return getBotInContext(botInfo || {}, {});
+	getBotContext : function(botInfo, defaultInfo){
+		return getBotInContext(botInfo || {}, defaultInfo || {});
 	},
 
 	start : function(botInfo, isLocal){
