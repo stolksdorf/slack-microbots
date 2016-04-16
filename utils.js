@@ -24,7 +24,7 @@ module.exports = {
 	// value and unit pair.
 	//
 	//example: "It's 14 degrees out!" -> [{val : 14, unit : 'degrees'}]
-	extractNumberUnits = function(msg){
+	extractNumberUnits : function(msg){
 		var isNumber = (t)=> (/^\d+$/).test(t);
 		var val;
 		return _.reduce(_.words(msg), (r, word)=>{
