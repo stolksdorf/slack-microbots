@@ -20,6 +20,30 @@ module.exports = {
 		});
 	},
 
+	// Takes a message string and returns an array of objects that represent each
+	// value and unit pair.
+	//
+	//example: "It's 14 degrees out!" -> [{val : 14, unit : 'degrees'}]
+	extractNumberUnits = function(msg){
+		var isNumber = (t)=> (/^\d+$/).test(t);
+		var val;
+		return _.reduce(_.words(msg), (r, word)=>{
+			if(isNumber(word)){
+				val = word;
+			}else if(val && !isNumber(word)){
+				r.push({
+					val : val,
+					unit : word
+				});
+				val = null;
+			}
+			return r;
+		}, [])
+	},
+
+
+
+
 	// Given a weighted message map, will return a random message based on the weights
 	// {
 	//  'hey!' : 40,
