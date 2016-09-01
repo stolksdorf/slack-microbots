@@ -4,6 +4,41 @@ var cmds = require('./cmdLoader');
 var bots = require('./botLoader');
 
 
+const SlackInterface = require('./slack.api.js');
+const SlackSocket = require('./slack.socket.js');
+
+
+
+module.exports = function(token, botInfo = {}){
+	const BotInfo = _.defaults(botInfo, {
+		icon : ':tophat:',
+		name : 'helperbot'
+	});
+
+	const Slack = SlackInterface(token);
+
+	Slack.openSocket((msg) => {
+		console.log('socket', msg);
+	});
+
+
+
+	const slackCore = {
+		loadCmds : function(cmds){
+
+		},
+		loadBots : function(bots){
+
+		}
+	}
+
+
+	return slackCore;
+};
+
+
+/*
+
 
 module.exports = function(configObj){
 	configObj = _.extend({
@@ -40,3 +75,5 @@ module.exports = function(configObj){
 
 	logbot.info('Server Restart', 'Successfully rebooted!');
 }
+
+*/
