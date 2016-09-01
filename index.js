@@ -5,30 +5,31 @@ var bots = require('./botLoader');
 
 
 const SlackInterface = require('./slack.api.js');
-const SlackSocket = require('./slack.socket.js');
+
+const BotLoader = require('./bot.loader.js')
+
+console.log(BotLoader);
+
 
 
 
 module.exports = function(token, botInfo = {}){
 	const BotInfo = _.defaults(botInfo, {
-		icon : ':tophat:',
-		name : 'helperbot'
+		icon : ':gear:',
+		name : 'corebot'
 	});
 
 	const Slack = SlackInterface(token);
+	const Bots = BotLoader(Slack);
 
-	Slack.openSocket((msg) => {
-		console.log('socket', msg);
-	});
-
-
+	Slack.openSocket(Bots.handleMessage);
 
 	const slackCore = {
 		loadCmds : function(cmds){
 
 		},
 		loadBots : function(bots){
-
+			Bots.load(bots);
 		}
 	}
 

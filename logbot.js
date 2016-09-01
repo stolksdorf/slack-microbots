@@ -3,82 +3,50 @@ var request = require('superagent');
 
 var diagnosticsURL = '';
 
-var sendViaLogbot = function(msgObj){
-	if(!diagnosticsURL){
-		console.log(JSON.stringify(msgObj, null, '  '));
-		return;
-	}
+var logbot = function(val, title='log', color='#0000FF'){
+	console.log(val);
+	if(!diagnosticsURL) return;
 	request.post(diagnosticsURL)
-		.send(msgObj)
+		.send({
+			attachments: [{
+				color     : color,
+				title     : title,
+				text      : '```' + JSON.stringify(val, null, '  ') + '```',
+				mrkdwn_in : ['text']
+			}]
+		})
 		.end(function(err){})
 }
 
 
 module.exports = {
-	setUrl : function(url){
+	init : function(url){
 		diagnosticsURL = url;
 	},
 
-	log : function(){
-		var args = Array.prototype.slice.call(arguments);
-		sendViaLogbot({
-			color : '#0000FF',
-			"fields": [
-				{
-					"title": "Logging",
-					"value": JSON.stringify(args),
-					"short": false
-				}
-			]
-		})
+	log : function(...args){
+		logbot(args);
 	},
 
-	error : function(title, err){
+	error : function(err){
 		err = err || {};
 		var stack = err.stack ? err.stack : JSON.stringify(err, null, '  ');
 
-		sendViaLogbot({
-			color : 'danger',
-			"fields": [
-				{
-					"title": title,
-					"value": stack,
-					"short": false
-				}
-			]
-		})
+		logbot(stack, 'error', 'danger');
 	},
 
 	warn : function(title, msg){
-		sendViaLogbot({
-			color : 'warning',
-			"fields": [
-				{
-					"title": title,
-					"value": msg,
-					"short": false
-				}
-			]
-		})
+		logbot(msg, title, 'warning');
 	},
 
-	info : function(title, msg){
-		sendViaLogbot({
-			color : 'good',
-			"fields": [
-				{
-					"title": title,
-					"value": msg,
-					"short": false
-				}
-			]
-		})
+	info : function(...args){
+		logbot(args, 'info', 'good');
 	},
 
 	msg : function(text){
-		sendViaLogbot({
-			text : text
-		});
+		if(!diagnosticsURL) return;
+		request.post(diagnosticsURL)
+			.send(text)
+			.end(function(err){})
 	},
-
 };

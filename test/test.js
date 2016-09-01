@@ -1,10 +1,11 @@
+const logbot = require('../logbot.js');
+const config = require('./config.json');
+const MicroBots = require('../index.js');
 
-var config = require('./config.json');
-console.log(config);
+logbot.init(config.diagnostics_webhook);
 
-var SlackLib = require('../index.js');
 
-var SlackCore = SlackLib(config.token, {
+const SlackCore = MicroBots(config.token, {
 	name : 'TestBot',
 	icon : 'factory'
 });

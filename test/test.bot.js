@@ -1,12 +1,20 @@
 var _ = require('lodash');
 //var Storage = require('slack-helperbot/storage');
 
+const console = require('../logbot.js');
+
 
 module.exports = {
 	name : 'testbot',
 	icon : 'tophat',
 	listenFor : ['message'],
-	response : function(msg, info, Higgins){
-		if(info.user == 'scott') Higgins.reply('yo');
+	channel : 'general',
+	handle : function(msg, info, Slack){
+
+		if(info.user == 'scott') Slack.reply('yo', 'scott')
+				.then((res) => {
+					console.error(res);
+					console.msg('hey!');
+				})
 	}
 }
