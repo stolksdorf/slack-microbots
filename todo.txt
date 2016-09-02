@@ -1,0 +1,5 @@
+- fix logbot error
+- use logbot throughout the project
+- Do bot checks
+- Rename to `slack-microbots`
+- make cmd loader, pass an express instance

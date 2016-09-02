@@ -3,11 +3,13 @@ var request = require('superagent');
 
 var diagnosticsURL = '';
 
-var logbot = function(val, title='log', color='#0000FF'){
+var logbot = function(val, title='', color='good'){
 	console.log(val);
 	if(!diagnosticsURL) return;
 	request.post(diagnosticsURL)
 		.send({
+			username : 'logbot',
+			icon_emoji : ':information_source:',
 			attachments: [{
 				color     : color,
 				title     : title,
@@ -20,17 +22,25 @@ var logbot = function(val, title='log', color='#0000FF'){
 
 
 module.exports = {
-	init : function(url){
+	setupWebhook : function(url){
 		diagnosticsURL = url;
 	},
 
 	log : function(...args){
-		logbot(args);
+		logbot(args.length == 1 ? args[0] : args);
 	},
 
 	error : function(err){
+		if(err instanceof Error){
+			console.log(err);
+			console.log(err.message);
+			console.log(err.name);
+			console.log(err.stack);
+		};
+
+
 		err = err || {};
-		var stack = err.stack ? err.stack : JSON.stringify(err, null, '  ');
+		var stack = err.stack ? err.stack : err;
 
 		logbot(stack, 'error', 'danger');
 	},
@@ -46,7 +56,11 @@ module.exports = {
 	msg : function(text){
 		if(!diagnosticsURL) return;
 		request.post(diagnosticsURL)
-			.send(text)
+			.send({
+				username : 'logbot',
+				icon_emoji : ':information_source:',
+				text : text
+			})
 			.end(function(err){})
 	},
 };

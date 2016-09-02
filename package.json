@@ -4,7 +4,7 @@
   "description": "A slackbot framework for easily building microbots and commands",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "nodemon ./test/test.instance.js"
   },
   "repository": {
     "type": "git",

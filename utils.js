@@ -2,7 +2,6 @@ var _ = require('lodash');
 
 module.exports = {
 
-
 	// takes a message string and any number of arguments, either string or array
 	// The message must have each argument in it, or if the argument is an array
 	// at least one of the strings in the array

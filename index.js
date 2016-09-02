@@ -7,9 +7,11 @@ var bots = require('./botLoader');
 const SlackInterface = require('./slack.api.js');
 
 const BotLoader = require('./bot.loader.js')
+const CmdLoader = require('./cmd.loader.js')
 
-console.log(BotLoader);
 
+
+//TODO: Add a server restart message
 
 
 
@@ -20,19 +22,18 @@ module.exports = function(token, botInfo = {}){
 	});
 
 	const Slack = SlackInterface(token);
-	const Bots = BotLoader(Slack);
+	const Bots = BotLoader(Slack, BotInfo);
 
 	Slack.openSocket(Bots.handleMessage);
 
 	const slackCore = {
 		loadCmds : function(cmds){
-
+			CmdLoader.load(cmds);
 		},
 		loadBots : function(bots){
 			Bots.load(bots);
 		}
-	}
-
+	};
 
 	return slackCore;
 };

@@ -4,7 +4,7 @@ let Bots = [];
 
 
 
-module.exports = function(Slack){
+module.exports = function(Slack, botInfo){
 
 	const mapTarget = (target) => {
 		const channelId = _.findKey(Slack.channels, (channel)=>{
@@ -18,7 +18,6 @@ module.exports = function(Slack){
 
 
 	const getBotContext = (bot, msg)=>{
-
 		const context = {
 			reply : (text, target) => {
 				let _target = msg.channelId;
@@ -26,30 +25,28 @@ module.exports = function(Slack){
 				if(target){
 					_target = mapTarget(target);
 					if(!_target){
-						//LOGBOT AN ERROR
-						console.log('ERR cant find target');
+						console.error(`Can't find target named: ${target}`);
 						return Promise.reject();
 					}
 				}
-
 				return context.api('chat.postMessage', {
 					channel : _target,
 					text : text,
-
-				})
-
+				});
 			},
 			react: (emoji) => {
-
+				return context.api('reactions.add', {
+					channel : msg.channelId,
+					name : emoji,
+					timestamp : msg.ts
+				});
 			},
 			api : (cmd, payload) => {
 				return Slack.api(cmd, _.assign({
-						username : 'gearbot',
-						icon_emoji : ':gear:'
+						username   : bot.name || botInfo.name,
+						icon_emoji : bot.icon || botInfo.icon
 					}, payload))
-					.catch((err) => {
-						console.log(err); //LOGBOT
-					});
+					.catch(console.error);
 			}
 		}
 
@@ -60,23 +57,34 @@ module.exports = function(Slack){
 
 	return {
 		load : function(bots){
-			//check for handle
-			//check for name
-			//check for proper icon formatting
-			//check for channel
-
-			Bots = bots;
-
-
+			_.each(bots, (bot) => {
+				if(!bot.channel){
+					console.warn(`No channel set for '${bot.name}'. Set it to * if you want to listen to all.`);
+				}else{
+					Bots.push(bot);
+				}
+			})
 		},
 
 		handleMessage : function(msg){
 			_.each(Bots, (bot)=>{
+				if(bot.channel !== '*' && bot.channel !== msg.channel) return;
+
 				const context = getBotContext(bot, msg)
-
-				bot.handle(msg.text, msg, context);
-			})
-
+				const errHandler = (err) => {
+					console.error(err, 'Bot Run Error : ' + bot.file);
+					context.reply('Oops, looks like I broke. Check out #diagnostics for details.');
+				};
+				const d = require('domain').create();
+				d.on('error', errHandler);
+				d.run(()=>{
+					try{
+						bot.handle(msg.text, msg, context);
+					}catch(err){
+						errHandler(err);
+					}
+				});
+			});
 		}
 
 	}

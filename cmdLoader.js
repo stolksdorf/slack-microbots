@@ -1,10 +1,10 @@
-var _ = require('lodash');
-var path = require('path');
-var Logbot = require('./logbot');
+const _ = require('lodash');
+const path = require('path');
+const Logbot = require('./logbot');
 
-var Cmds = [];
+const Cmds = [];
 
-var formatResponse = function(response){
+const formatResponse = function(response){
 	if(_.isString(response)){
 		return {
 			text : response
@@ -19,13 +19,13 @@ var formatResponse = function(response){
 };
 
 
-var reply_callback = function(res, response){
+const reply_callback = function(res, response){
 	return res.status(200).send(_.extend({
 		'response_type': 'in_channel',
 	}, formatResponse(response)));
 };
 
-var error_callback = function(res, err){
+const error_callback = function(res, err){
 	if(_.isString(err)){
 		return res.status(200).send(_.extend({
 			'response_type': 'ephemeral',
@@ -36,20 +36,16 @@ var error_callback = function(res, err){
 
 module.exports = {
 
-	getCmds : function(){
-		return Cmds;
-	},
-
-	load : function(app, cmdList){
-		var rootDir = path.dirname(Object.keys(require.cache)[0]);
-		var loadResults ={
+	load : function(expressInstance, cmds){
+		const rootDir = path.dirname(Object.keys(require.cache)[0]);
+		const loadResults ={
 			success : [],
 			error : []
 		}
 
-		_.each(cmdList, function(cmdPath){
+		_.each(cmds, function(cmdPath){
 			try{
-				var cmd = require(path.join(rootDir, cmdPath));
+				const cmd = require(path.join(rootDir, cmdPath));
 				loadResults.success.push(cmdPath);
 				Cmds.push({
 					name : cmdPath,
@@ -61,15 +57,15 @@ module.exports = {
 				return;
 			}
 
-			var cmdUrl = '/' + path.basename(cmdPath, '.js');
+			const cmdUrl = '/' + path.basename(cmdPath, '.js');
 
-			app.post(cmdUrl, function(req, res){
+			expressInstance.post(cmdUrl, function(req, res){
 				res.status(200).send({
 					text : "Opps, looks like you set your command to have a *method* of `POST`, it should be set to `GET`"
 				})
 			});
 
-			app.get(cmdUrl, function(req, res){
+			expressInstance.get(cmdUrl, function(req, res){
 				try{
 					cmd(req.query.text, req.query, reply_callback.bind(this, res), error_callback.bind(this, res));
 				}catch(err){
