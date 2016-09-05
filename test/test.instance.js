@@ -1,9 +1,8 @@
 const logbot = require('../logbot.js');
 const config = require('./config.json');
-const MicroBots = require('../index.js');
+const MicroBots = require('../microbots.js');
 
 logbot.setupWebhook(config.diagnostics_webhook);
-
 
 const app = {
 	all : ()=>{}

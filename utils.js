@@ -6,7 +6,7 @@ module.exports = {
 	// The message must have each argument in it, or if the argument is an array
 	// at least one of the strings in the array
 	//
-	//example: utils.messageHas(msg, ['higgins', 'higs', 'higbro'], 'pokedex')
+	//example: utils.messageHas(msg, ['higgins', 'higs', 'higbro'], 'pokedex') : 'Hey higs, do you have a pokedex?' -> true
 	messageHas : function(msg){
 		if(!msg) return false;
 		var words = Array.prototype.slice.call(arguments, 1);

@@ -1,7 +1,7 @@
 const request = require('superagent-promise')(require('superagent'), Promise);
 const _ = require('lodash');
 const WebSocket = require('ws');
-const log = require('./logbot.js');
+const log = require('../logbot.js');
 
 const Slack = function(token){
 	let socket;

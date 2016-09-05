@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const console = require('./logbot.js');
+const console = require('../logbot.js');
 
 const formatResponse = (response) => {
 	if(_.isString(response)){
