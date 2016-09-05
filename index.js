@@ -28,10 +28,10 @@ module.exports = function(token, botInfo = {}){
 
 	const slackCore = {
 		loadCmds : function(cmds){
-			CmdLoader.load(cmds);
+			return CmdLoader.load(cmds);
 		},
 		loadBots : function(bots){
-			Bots.load(bots);
+			return Bots.load(bots);
 		}
 	};
 

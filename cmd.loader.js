@@ -19,9 +19,8 @@ module.exports = {
 				return;
 			}
 
-			expressInstance.all(`/cmd/${cmd.url}`, (req, res) => {
+			expressInstance.all(`${cmd.url}`, (req, res) => {
 				const input = _.assign({}, req.query, req.body);
-
 				try{
 					cmd.handle(
 						input.text,
@@ -43,6 +42,7 @@ module.exports = {
 				}
 			})
 		});
+		return expressInstance;
 	}
 
 }
