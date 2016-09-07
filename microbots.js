@@ -18,8 +18,8 @@ module.exports = function(token, botInfo = {}){
 	Slack.openSocket(Bots.handleMessage);
 
 	return {
-		loadCmds : function(cmds){
-			return CmdLoader.load(cmds);
+		loadCmds : function(expressInstance, cmds){
+			return CmdLoader.load(expressInstance, cmds);
 		},
 		loadBots : function(bots){
 			return Bots.load(bots);
