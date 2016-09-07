@@ -24,16 +24,21 @@ module.exports = storage = {
 			})
 		})
 	},
-	get : function(key, cb){
-		if(cb && db.connected){
-			db.get(key, function(err, res){
-				return cb(err, JSON.parse(res))
-			})
+	create : function(prefix){
+		return {
+			get : function(key, cb){
+				if(cb && db.connected){
+					db.get(`${prefix}|key`, function(err, res){
+						return cb(err, JSON.parse(res))
+					})
+				}
+				return STORAGE[`${prefix}|key`];
+			},
+			set : function(key, val, cb){
+				STORAGE[`${prefix}|key`] = val;
+				return db.connected && db.set(`${prefix}|key`, JSON.stringify(val), cb);
+			},
 		}
-		return STORAGE[key];
-	},
-	set : function(key, val, cb){
-		STORAGE[key] = val;
-		return db.connected && db.set(key, JSON.stringify(val), cb);
-	},
+	}
+
 };
