@@ -28,15 +28,15 @@ module.exports = storage = {
 		return {
 			get : function(key, cb){
 				if(cb && db.connected){
-					db.get(`${prefix}|key`, function(err, res){
+					db.get(`${prefix}|${key}`, function(err, res){
 						return cb(err, JSON.parse(res))
 					})
 				}
-				return STORAGE[`${prefix}|key`];
+				return STORAGE[`${prefix}|${key}`];
 			},
-			set : function(key, val, cb){
+			set : function(key, val, cb=()=>{}){
 				STORAGE[`${prefix}|key`] = val;
-				return db.connected && db.set(`${prefix}|key`, JSON.stringify(val), cb);
+				return db.connected && db.set(`${prefix}|${key}`, JSON.stringify(val), cb);
 			},
 		}
 	}
