@@ -37,20 +37,18 @@ module.exports = {
 	},
 
 	error : function(err){
-		/*
-		if(err instanceof Error){
-			console.log(err);
-			console.log(err.message);
-			console.log(err.name);
-			console.log(err.stack);
-		};
+		console.log(err);
+		if(!(err instanceof Error)){
+			err = new Error(err);
+		}
 
+		var stack = _.filter(err.stack.split('\n'), (trace)=>{
+			return true
+			if(trace.indexOf('.js') === -1) return true;
+			return trace.indexOf('module.js') === -1;
+		}).join('\n');
 
-		err = err || {};
-		var stack = err.stack ? err.stack : err;
-
-		logbot(stack, 'error', 'danger');
-		*/
+		logbot('```' + stack + '```', `Error: ${err.message}`, 'danger');
 	},
 
 	warn : function(title, msg){

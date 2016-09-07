@@ -35,6 +35,8 @@ module.exports = function(Slack, botInfo){
 				});
 			},
 			react: (emoji) => {
+				console.log('msg', msg);
+
 				return context.api('reactions.add', {
 					channel : msg.channelId,
 					name : emoji,
@@ -42,13 +44,14 @@ module.exports = function(Slack, botInfo){
 				});
 			},
 			api : (cmd, payload) => {
+				console.log('here?', cmd, payload);
 				return Slack.api(cmd, _.assign({
 						username   : bot.name || botInfo.name,
 						icon_emoji : bot.icon || botInfo.icon
 					}, payload))
-
-				//TODO: Make sure these errors are good
-					.catch(logbot.error);
+					.catch((err) => {
+						logbot.error(`Slack API Error: ${err}`);
+					});
 			}
 		}
 
@@ -75,6 +78,10 @@ module.exports = function(Slack, botInfo){
 
 				const context = getBotContext(bot, msg)
 				const errHandler = (err) => {
+
+					console.log('getting ere');
+
+
 					logbot.log('filename yo', err.fileName, true, false, [true, { d : 6}])
 					logbot.log('filename yo', err.fileName);
 
