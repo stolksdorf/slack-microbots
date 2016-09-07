@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const console = require('../logbot.js');
+const logbot = require('../logbot.js');
 let Bots = [];
 
 
@@ -25,7 +25,7 @@ module.exports = function(Slack, botInfo){
 				if(target){
 					_target = mapTarget(target);
 					if(!_target){
-						console.error(`Can't find target named: ${target}`);
+						logbot.error(`Can't find target named: ${target}`);
 						return Promise.reject();
 					}
 				}
@@ -46,7 +46,9 @@ module.exports = function(Slack, botInfo){
 						username   : bot.name || botInfo.name,
 						icon_emoji : bot.icon || botInfo.icon
 					}, payload))
-					.catch(console.error);
+
+				//TODO: Make sure these errors are good
+					.catch(logbot.error);
 			}
 		}
 
@@ -59,7 +61,8 @@ module.exports = function(Slack, botInfo){
 		load : function(bots){
 			_.each(bots, (bot) => {
 				if(!bot.channel){
-					console.warn(`No channel set for '${bot.name}'. Set it to * if you want to listen to all.`);
+					logbot.warn(`No channel set for '${bot.name}'`,
+						'Each bot needs to specify which channel they want to listen to. Set it to * if you want to listen to all.');
 				}else{
 					Bots.push(bot);
 				}
@@ -72,7 +75,11 @@ module.exports = function(Slack, botInfo){
 
 				const context = getBotContext(bot, msg)
 				const errHandler = (err) => {
-					console.error(err, 'Bot Run Error : ' + bot.file);
+					logbot.log('filename yo', err.fileName, true, false, [true, { d : 6}])
+					logbot.log('filename yo', err.fileName);
+
+
+					logbot.error(err, 'Bot Run Error : ' + bot.file);
 					context.reply('Oops, looks like I broke. Check out #diagnostics for details.');
 				};
 				const d = require('domain').create();

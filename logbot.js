@@ -13,7 +13,7 @@ var logbot = function(val, title='', color='good'){
 			attachments: [{
 				color     : color,
 				title     : title,
-				text      : '```' + JSON.stringify(val, null, '  ') + '```',
+				text      : val,
 				mrkdwn_in : ['text']
 			}]
 		})
@@ -27,10 +27,17 @@ module.exports = {
 	},
 
 	log : function(...args){
-		logbot(args.length == 1 ? args[0] : args);
+		let hasObj = false;
+		const msg = _.map(args, (arg)=>{
+			if(_.isObject(arg)) hasObj = true;
+			return JSON.stringify(arg, null, '  ') || 'undefined'
+		}).join(', ');
+		if(!hasObj) return logbot('`' + msg + '`');
+		return logbot('``` ' + msg + ' ```');
 	},
 
 	error : function(err){
+		/*
 		if(err instanceof Error){
 			console.log(err);
 			console.log(err.message);
@@ -43,6 +50,7 @@ module.exports = {
 		var stack = err.stack ? err.stack : err;
 
 		logbot(stack, 'error', 'danger');
+		*/
 	},
 
 	warn : function(title, msg){
