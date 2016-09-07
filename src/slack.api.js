@@ -60,7 +60,7 @@ const Slack = function(token){
 					processTeamData(res.body);
 					socket = new WebSocket(res.body.url);
 					socket.on('open', () => {
-						log.msg('Socket connected');
+						console.log('Socket connected');
 					});
 					socket.on('message', (rawData, flags) => {
 						const msg = JSON.parse(rawData);
