@@ -37,7 +37,7 @@ module.exports = {
 						}
 					);
 				}catch(err){
-					console.error(err, 'Command Run Error : ');
+					console.error(`Command Run Error : ${err}`);
 					return res.status(200).send();
 				}
 			})

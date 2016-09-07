@@ -36,8 +36,7 @@ module.exports = {
 		return logbot('``` ' + msg + ' ```');
 	},
 
-	error : function(err){
-		console.log(err);
+	error : function(err, title='Error'){
 		if(!(err instanceof Error)){
 			err = new Error(err);
 		}
@@ -48,7 +47,7 @@ module.exports = {
 			return trace.indexOf('module.js') === -1;
 		}).join('\n');
 
-		logbot('```' + stack + '```', `Error: ${err.message}`, 'danger');
+		logbot('```' + stack + '```', `${title}: ${err.message}`, 'danger');
 	},
 
 	warn : function(title, msg){
