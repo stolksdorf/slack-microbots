@@ -1,6 +1,6 @@
 {
   "name": "slack-microbots",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A slackbot framework for easily building microbots and commands",
   "main": "microbots.js",
   "scripts": {
@@ -26,6 +26,7 @@
     "lodash": "^4.6.1",
     "redis": "^2.5.3",
     "superagent": "^1.8.2",
-    "superagent-promise": "^1.1.0"
+    "superagent-promise": "^1.1.0",
+    "ws": "^1.1.1"
   }
 }
