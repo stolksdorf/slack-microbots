@@ -1,0 +1,11 @@
+- fix logbot error
+- use logbot throughout the project
+- Logobt should have a generalized output
+- Logbot should do stack traces
+- Double check that cmds should work
+
+
+
+
+- Rename to `slack-microbots`
+- make cmd loader, pass an express instance
