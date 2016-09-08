@@ -35,7 +35,6 @@ module.exports = function(Slack, botInfo){
 				});
 			},
 			react: (emoji) => {
-				console.log(msg);
 				return context.api('reactions.add', {
 					channel : msg.channelId,
 					name : emoji,
@@ -69,6 +68,8 @@ module.exports = function(Slack, botInfo){
 				}
 			})
 		},
+
+		getBotInstance : getBotContext,
 
 		handleMessage : function(msg){
 			_.each(Bots, (bot)=>{

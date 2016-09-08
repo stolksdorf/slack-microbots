@@ -23,6 +23,7 @@ module.exports = function(token, botInfo = {}){
 		},
 		loadBots : function(bots){
 			return Bots.load(bots);
-		}
+		},
+		getBotInstance : Bots.getBotInstance
 	};
 };
