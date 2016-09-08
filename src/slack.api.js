@@ -19,9 +19,8 @@ const Slack = function(token){
 	};
 
 	const processIncomingMsg = function(msg){
-		const res = {};
+		const res = _.assign({}, msg);
 
-		res.ts = msg.ts;
 		res.channelId = msg.channel;
 		res.userId = msg.user || msg.bot_id;
 
