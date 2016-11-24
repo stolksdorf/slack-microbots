@@ -60,6 +60,7 @@ module.exports = function(Slack, botInfo){
 	return {
 		load : function(bots){
 			_.each(bots, (bot) => {
+				if(!bot.events) bot.events = ['message'];
 				if(!bot.channel){
 					logbot.warn(`No channel set for '${bot.name}'`,
 						'Each bot needs to specify which channel they want to listen to. Set it to * if you want to listen to all.');
@@ -74,6 +75,7 @@ module.exports = function(Slack, botInfo){
 		handleMessage : function(msg){
 			_.each(Bots, (bot)=>{
 				if(bot.channel !== '*' && bot.channel !== msg.channel) return;
+				if(!_.includes(bot.events, msg.type)) return;
 
 				const context = getBotContext(bot, msg)
 				const errHandler = (err) => {

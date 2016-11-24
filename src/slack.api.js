@@ -21,6 +21,7 @@ const Slack = function(token){
 	const processIncomingMsg = function(msg){
 		const res = _.assign({}, msg);
 
+		res.text = res.text || "";
 		res.channelId = msg.channel;
 		res.userId = msg.user || msg.bot_id;
 
@@ -63,7 +64,6 @@ const Slack = function(token){
 					});
 					socket.on('message', (rawData, flags) => {
 						const msg = JSON.parse(rawData);
-						if(msg.type !== 'message') return;
 						if(msg.bot_id === slack.botId) return;
 						const message = processIncomingMsg(msg);
 						if(message.user == 'logbot') return;
